@@ -23,13 +23,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-		main.cpp \
-		MainWindow.cpp \
-    xyseriesiodevice.cpp
+	app/main.cpp \
+	app/MainWindow.cpp \
+    app/IOTypes/xyseriesiodevice.cpp \
+    app/IOTypes/FT2StreamReader.cpp \
+    app/IOTypes/wavfile.cpp \
+    app/IOTypes/xyseriesiodevice.cpp
 
 HEADERS += \
-		MainWindow.hpp \
-    xyseriesiodevice.h
+	app/MainWindow.hpp \
+    app/IOTypes/xyseriesiodevice.hpp \
+    app/IOTypes/FT2StreamReader.hpp \
+    app/IOTypes/wavfile.h \
+    app/IOTypes/xyseriesiodevice.hpp
 
 FORMS += \
 		MainWindow.ui
@@ -38,3 +44,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+	app/spectrum.qrc
