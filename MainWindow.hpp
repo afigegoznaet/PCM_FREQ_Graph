@@ -34,6 +34,8 @@ private slots:
 
 	void on_playSoundCheckBox_toggled(bool checked);
 
+	void on_startStopButton_toggled(bool checked);
+
 private:
 	void setupControls();
 	void setupAmplitudeChart();

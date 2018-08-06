@@ -34,7 +34,7 @@
 XYSeriesIODevice::XYSeriesIODevice(QXYSeries *series, int size, QObject *parent) :
 	QIODevice(parent),
 	m_series(series),
-	sampleCount(size)
+	maxSamples(size)
 {
 }
 
@@ -47,7 +47,7 @@ qint64 XYSeriesIODevice::readData(char *data, qint64 maxSize)
 
 qint64 XYSeriesIODevice::writeData(const char *data, qint64 maxSize)
 {
-	static const int resolution = 1;
+	static const int resolution = maxSamples/sampleCount;
 
 	if (m_buffer.isEmpty()) {
 		m_buffer.reserve(sampleCount);
@@ -64,7 +64,7 @@ qint64 XYSeriesIODevice::writeData(const char *data, qint64 maxSize)
 	}
 
 	for (int s = start; s < sampleCount; ++s, data += resolution)
-		m_buffer[s].setY(qreal(uchar(*data) -128) / qreal(128));
+		m_buffer[s].setY(qreal(uchar(*data) -128) / qreal(INT_MAX));
 
 	m_series->replace(m_buffer);
 	return (sampleCount - start) * resolution;

@@ -57,6 +57,7 @@ private:
 	QXYSeries *m_series;
 	QVector<QPointF> m_buffer;
 	int sampleCount = 2000;
+	int maxSamples = 2000;
 };
 
 #endif // XYSERIESIODEVICE_H

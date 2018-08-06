@@ -24,19 +24,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 	QAudioFormat formatAudio;
-	formatAudio.setSampleRate(8000);
+	formatAudio.setSampleRate(48000);
 	formatAudio.setChannelCount(1);
-	formatAudio.setSampleSize(8);
+	formatAudio.setSampleSize(16);
 	formatAudio.setCodec("audio/pcm");
 	formatAudio.setByteOrder(QAudioFormat::LittleEndian);
-	formatAudio.setSampleType(QAudioFormat::UnSignedInt);
+	formatAudio.setSampleType(QAudioFormat::SignedInt);
 
 	m_audioInput = new QAudioInput(QAudioDeviceInfo::defaultInputDevice(), formatAudio, this);
-
 	setupControls();
-	setupAmplitudeChart();
-	setupFrequencyChart();
-	setupFrequencyStats();
+
 }
 
 MainWindow::~MainWindow(){
@@ -61,7 +58,7 @@ void MainWindow::setupAmplitudeChart(){
 	m_chart->addSeries(m_amplitudes);
 	QValueAxis *axisX = new QValueAxis;
 	int maxSamples =  ui->sampleRate->currentData().toInt();
-	axisX->setRange(0,maxSamples);
+	axisX->setRange(0,2000);
 	axisX->setLabelFormat("%g");
 	axisX->setTitleText("Samples");
 	QValueAxis *axisY = new QValueAxis;
@@ -75,7 +72,8 @@ void MainWindow::setupAmplitudeChart(){
 	m_device = new XYSeriesIODevice(m_amplitudes, maxSamples, this);
 	m_device->open(QIODevice::WriteOnly);
 
-	m_audioInput->start(m_device);
+
+
 
 }
 
@@ -135,5 +133,19 @@ void MainWindow::on_bitDepth_currentIndexChanged(int index){
 }
 
 void MainWindow::on_playSoundCheckBox_toggled(bool checked){
+
+}
+
+void MainWindow::on_startStopButton_toggled(bool checked){
+	if(checked){
+		ui->startStopButton->setText("Stop");
+		setupAmplitudeChart();
+		setupFrequencyChart();
+		setupFrequencyStats();
+		m_audioInput->start(m_device);
+	}else{
+		ui->startStopButton->setText("Start");
+		m_audioInput->stop();
+	}
 
 }

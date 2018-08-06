@@ -170,6 +170,9 @@
                  <property name="text">
                   <string>Start</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -211,7 +214,7 @@
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
-	   <property name="frameShadow">
+       <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
        <property name="midLineWidth">
