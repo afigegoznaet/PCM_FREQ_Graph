@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QtConcurrent/QtConcurrent>
 #include <mutex>
-
+#include "xyseriesiodevice.hpp"
 //#define BUFFER_SIZE 2000
 
 #define BUFFER_SIZE 16384
@@ -208,11 +208,17 @@ FT2StreamReader::FT2StreamReader(QObject *parent) :
 }
 
 void FT2StreamReader::addListener(FT2StreamConsumer* listener){
+	auto ampGraph = qobject_cast<XYSeriesIODevice*>(listener);
+	if(ampGraph){
+		connect(this, SIGNAL(transferredBytes(quint16)), ampGraph, SLOT(showData(quint16)));
+		return;
+	}
 	listeners.push_back(listener);
 	listener->setData(tmpBuf);
 	qDebug()<<"Data address: "<<&tmpBuf[0];
 	connect(listeners[0], SIGNAL(finishedReading()), this, SLOT(readStream()),
 			Qt::ConnectionType(/*Qt::QueuedConnection | */Qt::UniqueConnection));
+
 }
 
 
@@ -236,6 +242,7 @@ void FT2StreamReader::readStream(){
 	for(auto listener : listeners)
 		listener->resetBuffer();
 		//listener->writeData(tmpBuf);
+	emit transferredBytes(sizeTransferred);
 
 	qDebug()<<"Read chunk";
 	qDebug()<<"tmpsize: "<<tmpBuf.size();

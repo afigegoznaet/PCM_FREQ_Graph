@@ -12,6 +12,8 @@
 #include <QAudioOutput>
 #include <QSettings>
 
+#define X_SAMPLES 1024
+
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
@@ -97,9 +99,9 @@ void MainWindow::setupAmplitudeChart(){
 	//m_chart->addSeries(m_amplitudes);
 	QValueAxis *axisX = new QValueAxis;
 
-	axisX->setRange(0,4096);
+	axisX->setRange(0,X_SAMPLES);
 	axisX->setLabelFormat("%g");
-	axisX->setTitleText("Samples");
+	axisX->setTitleText("Data Points");
 	QValueAxis *axisY = new QValueAxis;
 	axisY->setRange(-1, 1);
 	axisY->setTitleText("Audio level");
@@ -215,7 +217,7 @@ void MainWindow::setupStreams(){
 	m_analysisFile->open(QIODevice::ReadWrite);
 	m_analysisFile->readHeader();
 	//int maxSamples =  ui->sampleRate->currentData().toInt();
-	m_device = new XYSeriesIODevice(m_amplitudes, streamReader, 16384, this);
+	m_device = new XYSeriesIODevice(m_amplitudes, streamReader, X_SAMPLES, this);
 	m_device->open(QIODevice::ReadWrite);
 
 	//initialize();

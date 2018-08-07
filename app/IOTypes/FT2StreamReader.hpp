@@ -15,7 +15,8 @@ public:
 	explicit FT2StreamReader(QObject *parent = nullptr);
 
 	void addListener(FT2StreamConsumer *listener);
-
+signals:
+	void transferredBytes(quint16);
 public slots:
 	void readStream();
 private:
@@ -50,7 +51,7 @@ public:
 	void close() override{}
 signals:
 	void finishedReading();
-private:
+protected:
 	QBuffer internalBuffer;
 };
 

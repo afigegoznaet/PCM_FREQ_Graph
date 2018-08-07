@@ -36,6 +36,7 @@ XYSeriesIODevice::XYSeriesIODevice(QXYSeries *series, FT2StreamReader * streamRe
 	m_series(series),
 	maxSamples(size)
 {
+	streamReader->addListener(this);
 }
 
 qint64 XYSeriesIODevice::readData(char *data, qint64 maxSize)
@@ -46,7 +47,8 @@ qint64 XYSeriesIODevice::readData(char *data, qint64 maxSize)
 }
 
 qint64 XYSeriesIODevice::writeData(const char *data, qint64 maxSize)
-{
+{return 0;
+	/*
 	static const int resolution = 1 ;//maxSamples/sampleCount;
 
 	if (m_buffer.isEmpty()) {
@@ -67,5 +69,27 @@ qint64 XYSeriesIODevice::writeData(const char *data, qint64 maxSize)
 		m_buffer[s].setY(qreal(uchar(*data) -128) / qreal(128));
 
 	m_series->replace(m_buffer);
-	return (sampleCount - start) * resolution;
+	return (sampleCount - start) * resolution;*/
+}
+
+void XYSeriesIODevice::showData(quint16 transferredBytes){
+	if (m_buffer.isEmpty()) {
+		m_buffer.reserve(maxSamples);
+		for (int i = 0; i < maxSamples; ++i)
+			m_buffer.append(QPointF(i, 0));
+	}
+
+	int resolution = internalBuffer.size()/ maxSamples;
+	resolution/=sampleBitSize;
+
+	//std::vector<short> data[transferredBytes/2];
+	auto data = reinterpret_cast< const short*>( internalBuffer.data().data() );
+	for(int i=marker;i<transferredBytes/sampleBitSize;i+=resolution){
+		//qDebug()<<transferredBytes/sampleBitSize<<"_"<<i;
+		m_buffer[i/resolution].setY(((float)data[i])/SHRT_MAX);
+		marker++;
+	}
+	if(marker >= maxSamples)
+		marker = 0;
+	m_series->replace(m_buffer);
 }
