@@ -4,9 +4,9 @@
 #include <QtConcurrent/QtConcurrent>
 #include <mutex>
 
-#define BUFFER_SIZE 2000
+//#define BUFFER_SIZE 2000
 
-//#define BUFFER_SIZE 16384
+#define BUFFER_SIZE 16384
 
 //#define BUFFER_SIZE 4096
 

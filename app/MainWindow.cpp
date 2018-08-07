@@ -97,7 +97,7 @@ void MainWindow::setupAmplitudeChart(){
 	//m_chart->addSeries(m_amplitudes);
 	QValueAxis *axisX = new QValueAxis;
 
-	axisX->setRange(0,2000);
+	axisX->setRange(0,4096);
 	axisX->setLabelFormat("%g");
 	axisX->setTitleText("Samples");
 	QValueAxis *axisY = new QValueAxis;
@@ -214,8 +214,8 @@ void MainWindow::setupStreams(){
 	m_analysisFile = new FT2StreamConsumer(streamReader, this);
 	m_analysisFile->open(QIODevice::ReadWrite);
 	m_analysisFile->readHeader();
-	int maxSamples =  ui->sampleRate->currentData().toInt();
-	m_device = new XYSeriesIODevice(m_amplitudes, streamReader, maxSamples, this);
+	//int maxSamples =  ui->sampleRate->currentData().toInt();
+	m_device = new XYSeriesIODevice(m_amplitudes, streamReader, 16384, this);
 	m_device->open(QIODevice::ReadWrite);
 
 	//initialize();
