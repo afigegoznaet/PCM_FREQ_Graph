@@ -117,7 +117,8 @@ void MainWindow::setupFrequencyChart(){
 	auto chart = ui->frequencyChart->chart();
 	//chart->addSeries(frequencies);
 	QValueAxis *axisX = new QValueAxis;
-	axisX->setRange(0,  ui->sampleRate->currentData().toInt() / 2);
+	//axisX->setRange(0,  ui->sampleRate->currentData().toInt() / 2);
+	axisX->setRange(0,  24000);
 	axisX->setLabelFormat("%g");
 	axisX->setTitleText("Frequency");
 	QValueAxis *axisY = new QValueAxis;
@@ -135,7 +136,8 @@ void MainWindow::setupFrequencyStats(){
 	auto chart = ui->frequencyStatistics->chart();
 	//chart->addSeries(frequencyStats);
 	QValueAxis *axisX = new QValueAxis;
-	axisX->setRange(0,  ui->sampleRate->currentData().toInt() / 2);
+	//axisX->setRange(0,  ui->sampleRate->currentData().toInt() / 2);
+	axisX->setRange(0,  24000);
 	axisX->setLabelFormat("%g");
 	axisX->setTitleText("Frequency");
 	QValueAxis *axisY = new QValueAxis;
