@@ -170,12 +170,12 @@ RawFile::RawFile(QObject *parent)
 bool RawFile::readHeader(){
 	if(isOpen())
 		seek(0);
-	CombinedHeader header;
+	//CombinedHeader header;
 	bool result = true;
 	//strcpy(header.riff.descriptor.id, "RIFF");
 	//strcpy(header.riff.type, "WAVE");
 	//strcpy(header.wave.descriptor.id, "fmt");
-	header.wave.audioFormat = 1;
+	//header.wave.audioFormat = 1;
 	m_fileFormat.setByteOrder(QAudioFormat::LittleEndian);
 
 	m_fileFormat.setChannelCount(qFromLittleEndian<quint16>(1));

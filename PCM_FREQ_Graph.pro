@@ -27,15 +27,13 @@ SOURCES += \
 	app/MainWindow.cpp \
     app/IOTypes/xyseriesiodevice.cpp \
     app/IOTypes/FT2StreamReader.cpp \
-    app/IOTypes/wavfile.cpp \
-    app/IOTypes/xyseriesiodevice.cpp
+    app/IOTypes/wavfile.cpp
 
 HEADERS += \
 	app/MainWindow.hpp \
     app/IOTypes/xyseriesiodevice.hpp \
     app/IOTypes/FT2StreamReader.hpp \
-    app/IOTypes/wavfile.h \
-    app/IOTypes/xyseriesiodevice.hpp
+    app/IOTypes/wavfile.h
 
 FORMS += \
 		MainWindow.ui

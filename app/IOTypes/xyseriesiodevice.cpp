@@ -38,7 +38,7 @@ XYSeriesIODevice::XYSeriesIODevice(QXYSeries *series, FT2StreamReader * streamRe
 {
 	streamReader->addListener(this);
 }
-
+/*
 qint64 XYSeriesIODevice::readData(char *data, qint64 maxSize)
 {
 	Q_UNUSED(data)
@@ -69,9 +69,9 @@ qint64 XYSeriesIODevice::writeData(const char *data, qint64 maxSize)
 		m_buffer[s].setY(qreal(uchar(*data) -128) / qreal(128));
 
 	m_series->replace(m_buffer);
-	return (sampleCount - start) * resolution;*/
+	return (sampleCount - start) * resolution;
 }
-
+*/
 void XYSeriesIODevice::showData(quint16 transferredBytes){
 	if (m_buffer.isEmpty()) {
 		m_buffer.reserve(maxSamples);
