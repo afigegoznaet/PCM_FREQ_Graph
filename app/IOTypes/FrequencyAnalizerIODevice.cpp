@@ -20,7 +20,7 @@ void FrequencyAnalizerIODevice::showData(quint16 transferredBytes){
 
 	//std::vector<short> data[transferredBytes/2];
 	auto data = reinterpret_cast< const short*>( internalBuffer.data().data() );
-	for(int i=marker;i<transferredBytes/sampleBitSize;i+=resolution){
+	for(int i=marker;i<maxSamples;i+=resolution){
 		//qDebug()<<transferredBytes/sampleBitSize<<"_"<<i;
 		m_buffer[i/resolution].setY(((float)data[i])/SHRT_MAX);
 		marker++;

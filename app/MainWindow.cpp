@@ -119,7 +119,7 @@ void MainWindow::setupFrequencyChart(){
 	//chart->addSeries(frequencies);
 	QValueAxis *axisX = new QValueAxis;
 	//axisX->setRange(0,  ui->sampleRate->currentData().toInt() / 2);
-	axisX->setRange(0,  24000);
+	axisX->setRange(0,  4096);
 	axisX->setLabelFormat("%g");
 	axisX->setTitleText("Frequency");
 	QValueAxis *axisY = new QValueAxis;
@@ -222,7 +222,7 @@ void MainWindow::setupStreams(){
 	//int maxSamples =  ui->sampleRate->currentData().toInt();
 	amplitudeSeries = new XYSeriesIODevice(m_amplitudes, streamReader, X_SAMPLES, false, this);
 	amplitudeSeries->open(QIODevice::ReadWrite);
-	frequencySeries = new FrequencyAnalizerIODevice(frequencies, streamReader, 24000,this);
+	frequencySeries = new FrequencyAnalizerIODevice(frequencies, streamReader, 4096,this);
 	frequencySeries->open(QIODevice::ReadWrite);
 	//initialize();
 }
