@@ -2,6 +2,7 @@
 #include "MainWindow.hpp"
 #include "IOTypes/xyseriesiodevice.hpp"
 #include "IOTypes/FT2StreamReader.hpp"
+#include "IOTypes/FrequencyAnalizerIODevice.hpp"
 #include <QDebug>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
@@ -18,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
 	m_amplitudes(new QLineSeries),
-	frequencies(new QBarSeries),
-	frequencyStats(new QBarSeries)
+	frequencies(new QLineSeries),
+	frequencyStats(new QLineSeries)
 {
 
 	/***
@@ -212,16 +213,17 @@ void MainWindow::setupAudio(){
 void MainWindow::setupStreams(){
 
 	streamReader = new FT2StreamReader(this);
-	m_file = new FT2StreamConsumer(streamReader, this);
+	m_file = new FT2StreamConsumer(streamReader, false, this);
 	m_file->open(QIODevice::ReadWrite);
 	m_file->readHeader();
-	m_analysisFile = new FT2StreamConsumer(streamReader, this);
+	m_analysisFile = new FT2StreamConsumer(streamReader, false, this);
 	m_analysisFile->open(QIODevice::ReadWrite);
 	m_analysisFile->readHeader();
 	//int maxSamples =  ui->sampleRate->currentData().toInt();
-	m_device = new XYSeriesIODevice(m_amplitudes, streamReader, X_SAMPLES, this);
-	m_device->open(QIODevice::ReadWrite);
-
+	amplitudeSeries = new XYSeriesIODevice(m_amplitudes, streamReader, X_SAMPLES, false, this);
+	amplitudeSeries->open(QIODevice::ReadWrite);
+	frequencySeries = new FrequencyAnalizerIODevice(frequencies, streamReader, 24000,this);
+	frequencySeries->open(QIODevice::ReadWrite);
 	//initialize();
 }
 

@@ -18,13 +18,15 @@ SOURCES += \
 	IOTypes/FT2StreamReader.cpp \
 	IOTypes/wavfile.cpp \
 	MainWindow.cpp \
-	main.cpp
+	main.cpp \
+    IOTypes/FrequencyAnalizerIODevice.cpp
 
 HEADERS += \
 	IOTypes/xyseriesiodevice.hpp \
 	IOTypes/FT2StreamReader.hpp \
 	IOTypes/wavfile.h \
-	MainWindow.hpp
+	MainWindow.hpp \
+    IOTypes/FrequencyAnalizerIODevice.hpp
 
 FORMS += \
 		MainWindow.ui

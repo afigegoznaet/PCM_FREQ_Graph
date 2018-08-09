@@ -34,7 +34,7 @@ private:
 class FT2StreamConsumer : public RawFile{
 	Q_OBJECT
 public:
-	explicit FT2StreamConsumer(FT2StreamReader* dataSource, QObject *parent = nullptr);
+	explicit FT2StreamConsumer(FT2StreamReader* dataSource, bool base, QObject *parent = nullptr);
 	~FT2StreamConsumer() override {setOpenMode(QIODevice::NotOpen);}
 	bool seek(qint64) override{return true;}
 	bool open(QIODevice::OpenMode flags) override;

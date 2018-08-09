@@ -211,7 +211,7 @@ void FT2StreamReader::addListener(FT2StreamConsumer* listener){
 	auto ampGraph = qobject_cast<XYSeriesIODevice*>(listener);
 	if(ampGraph){
 		connect(this, SIGNAL(transferredBytes(quint16)), ampGraph, SLOT(showData(quint16)));
-		return;
+		//return;
 	}
 	listeners.push_back(listener);
 	listener->setData(tmpBuf);
@@ -248,11 +248,11 @@ void FT2StreamReader::readStream(){
 	qDebug()<<"tmpsize: "<<tmpBuf.size();
 }
 
-FT2StreamConsumer::FT2StreamConsumer(FT2StreamReader* dataSource, QObject *parent)
+FT2StreamConsumer::FT2StreamConsumer(FT2StreamReader* dataSource, bool base, QObject *parent)
 	: RawFile (parent)
 {
-	dataSource->addListener(this);
-
+	if(!base)
+		dataSource->addListener(this);
 }
 
 bool FT2StreamConsumer::open(QIODevice::OpenMode flags){

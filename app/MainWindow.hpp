@@ -20,6 +20,8 @@ class XYSeriesIODevice;
 class QAudioOutput;
 class FT2StreamReader;
 class FT2StreamConsumer;
+class FFTRealWrapper;
+class FrequencyAnalizerIODevice;
 
 class MainWindow : public QMainWindow
 {
@@ -52,13 +54,15 @@ private:
 	Ui::MainWindow *ui;
 	QChart *m_chart;
 	QLineSeries *m_amplitudes ;
-	QBarSeries* frequencies;
-	QBarSeries* frequencyStats;
-	XYSeriesIODevice* m_device;
+	QLineSeries* frequencies;
+	QLineSeries* frequencyStats;
+	XYSeriesIODevice* amplitudeSeries;
+	FrequencyAnalizerIODevice* frequencySeries;
 	QAudioOutput* m_audioOutput;
 	FT2StreamReader* streamReader;
 	FT2StreamConsumer* m_file;
 	FT2StreamConsumer* m_analysisFile;
+	FFTRealWrapper* m_fft;
 };
 
 #endif // MAINWINDOW_HPP

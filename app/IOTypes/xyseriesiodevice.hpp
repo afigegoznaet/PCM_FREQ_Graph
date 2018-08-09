@@ -48,7 +48,8 @@ class XYSeriesIODevice : public FT2StreamConsumer
 	Q_OBJECT
 public:
 	//explicit XYSeriesIODevice(QXYSeries *series, int size = 2000, QObject *parent = nullptr);
-	explicit XYSeriesIODevice(QXYSeries *series, FT2StreamReader* streamReader, int size = 2000, QObject *parent = nullptr);
+	explicit XYSeriesIODevice(QXYSeries *series, FT2StreamReader* streamReader,
+							  int size, bool base, QObject *parent = nullptr);
 	bool open(OpenMode mode) override {
 		return FT2StreamConsumer::open(mode);
 	}
@@ -58,13 +59,9 @@ public:
 	}
 
 public slots:
-	void showData(quint16);
+	virtual void showData(quint16);
 
 protected:
-	//qint64 readData(char *data, qint64 maxSize) override;
-	//qint64 writeData(const char *data, qint64 maxSize) override;
-
-private:
 	int sampleBitSize=2;
 	QXYSeries *m_series;
 	QVector<QPointF> m_buffer;
