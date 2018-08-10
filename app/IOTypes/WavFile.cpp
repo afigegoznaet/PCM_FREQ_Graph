@@ -52,7 +52,7 @@
 #include <QVector>
 #include <QDebug>
 //#include "utils.h"
-#include "wavfile.h"
+#include "WavFile.hpp"
 
 struct chunk
 {

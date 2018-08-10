@@ -27,7 +27,7 @@
 **
 ****************************************************************************/
 
-#include "xyseriesiodevice.hpp"
+#include "XYSeriesIODevice.hpp"
 
 #include <QtCharts/QXYSeries>
 

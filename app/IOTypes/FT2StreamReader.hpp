@@ -2,7 +2,7 @@
 #define FT2STREAMREADER_HPP
 
 #include <QBuffer>
-#include "wavfile.h"
+#include "WavFile.hpp"
 #include <vector>
 #include <QFuture>
 

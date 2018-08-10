@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QtConcurrent/QtConcurrent>
 #include <mutex>
-#include "xyseriesiodevice.hpp"
+#include "XYSeriesIODevice.hpp"
 //#define BUFFER_SIZE 2000
 
 #define BUFFER_SIZE 16384

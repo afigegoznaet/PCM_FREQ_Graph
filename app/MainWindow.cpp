@@ -1,6 +1,6 @@
 #include "ui_MainWindow.h"
 #include "MainWindow.hpp"
-#include "IOTypes/xyseriesiodevice.hpp"
+#include "IOTypes/XYSeriesIODevice.hpp"
 #include "IOTypes/FT2StreamReader.hpp"
 #include "IOTypes/FrequencyAnalizerIODevice.hpp"
 #include <QDebug>

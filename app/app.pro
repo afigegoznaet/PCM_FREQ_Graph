@@ -14,19 +14,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++14
 
 SOURCES += \
-	IOTypes/xyseriesiodevice.cpp \
 	IOTypes/FT2StreamReader.cpp \
-	IOTypes/wavfile.cpp \
 	MainWindow.cpp \
 	main.cpp \
-    IOTypes/FrequencyAnalizerIODevice.cpp
+	IOTypes/FrequencyAnalizerIODevice.cpp \
+	IOTypes/FrequencySpectrum.cpp \
+	IOTypes/WavFile.cpp \
+	IOTypes/XYSeriesIODevice.cpp
 
 HEADERS += \
-	IOTypes/xyseriesiodevice.hpp \
 	IOTypes/FT2StreamReader.hpp \
-	IOTypes/wavfile.h \
 	MainWindow.hpp \
-    IOTypes/FrequencyAnalizerIODevice.hpp
+	IOTypes/FrequencyAnalizerIODevice.hpp \
+	IOTypes/FrequencySpectrum.hpp \
+	IOTypes/WavFile.hpp \
+	IOTypes/XYSeriesIODevice.hpp
 
 FORMS += \
 		MainWindow.ui
@@ -35,6 +37,10 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+fftreal_dir = ../3rdparty/fftreal
+
+INCLUDEPATH += $${fftreal_dir}
 
 RESOURCES += \
 	spectrum.qrc
