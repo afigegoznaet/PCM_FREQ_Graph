@@ -40,6 +40,19 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 fftreal_dir = ../3rdparty/fftreal
 
+# Dynamic linkage against FFTReal DLL
+!contains(DEFINES, DISABLE_FFT) {
+    macx {
+        # Link to fftreal framework
+        LIBS += -F$${fftreal_dir}
+        LIBS += -framework fftreal
+    } else {
+        LIBS += -L..$${spectrum_build_dir}
+        LIBS += -lfftreal
+    }
+}
+
+
 INCLUDEPATH += $${fftreal_dir}
 
 RESOURCES += \

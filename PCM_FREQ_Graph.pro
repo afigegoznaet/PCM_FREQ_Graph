@@ -6,8 +6,10 @@ TEMPLATE = subdirs
 # Ensure that library is built before application
 CONFIG  += ordered
 
-SUBDIRS += 3rdparty/fftreal
+SUBDIRS += fftreal
 SUBDIRS += app
 
-app.depends = 3rdparty/fftreal
+fftreal.subdir = 3rdparty/fftreal
+
+app.depends = fftreal
 
