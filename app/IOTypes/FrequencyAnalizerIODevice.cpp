@@ -75,27 +75,27 @@ void SpectrumAnalyserThread::calculateWindow()
 	}
 }
 
-void SpectrumAnalyserThread::calculateSpectrum(const QByteArray &buffer,
+void SpectrumAnalyserThread::calculateSpectrum(QVector<DataType> *buffer,
 												int inputFrequency,
 												int bytesPerSample)
 {
-#ifndef DISABLE_FFT
-	Q_ASSERT(buffer.size() == m_numSamples * bytesPerSample);
+	//Q_ASSERT(buffer->size() == m_numSamples * bytesPerSample);
 
 	// Initialize data array
-	const char *ptr = buffer.constData();
+	const float *ptr = buffer->constData();
 	for (int i=0; i<m_numSamples; ++i) {
-		const qint16 pcmSample = *reinterpret_cast<const qint16*>(ptr);
+		//const qint16 pcmSample = *reinterpret_cast<const qint16*>(ptr);
 		// Scale down to range [-1.0, 1.0]
-		const DataType realSample = pcmToReal(pcmSample);
-		const DataType windowedSample = realSample * m_window[i];
+		//const DataType realSample = pcmToReal(pcmSample);
+		const DataType windowedSample = ptr[i] * m_window[i];
 		m_input[i] = windowedSample;
-		ptr += bytesPerSample;
+		//ptr += bytesPerSample;
 	}
 
 	// Calculate the FFT
 	m_fft->calculateFFT(m_output.data(), m_input.data());
 
+	//m_fft->calculateFFT(m_output.data(), buffer->data());
 	// Analyze output to obtain amplitude and phase for each frequency
 	for (int i=2; i<=m_numSamples/2; ++i) {
 		// Calculate frequency of this complex sample
@@ -116,8 +116,6 @@ void SpectrumAnalyserThread::calculateSpectrum(const QByteArray &buffer,
 		amplitude = qMin(qreal(1.0), amplitude);
 		m_spectrum[i].amplitude = amplitude;
 	}
-#endif
-
 	emit calculationComplete(m_spectrum);
 }
 
@@ -125,9 +123,17 @@ void SpectrumAnalyserThread::calculateSpectrum(const QByteArray &buffer,
 
 FrequencyAnalizerIODevice::FrequencyAnalizerIODevice(
 		QXYSeries *series, FT2StreamReader* streamReader, int size, QObject *parent) :
-	XYSeriesIODevice(series, streamReader, size, true, parent)
+	XYSeriesIODevice(series, streamReader, size, true, parent),
+	buf1(SpectrumLengthSamples),
+	buf2(SpectrumLengthSamples)
 {
-streamReader->addListener(this);
+	streamReader->addListener(this);
+	analizerThread = new SpectrumAnalyserThread(this);
+	connect(this, SIGNAL(calculateSpectrum(QVector<DataType> *, int, int)),
+			analizerThread, SLOT(calculateSpectrum(QVector<DataType> *, int, int)));
+	connect(analizerThread, SIGNAL(calculationComplete(const FrequencySpectrum &)),
+			this, SLOT(calculationComplete(const FrequencySpectrum &)));
+	curBuf = &buf1;
 }
 
 void FrequencyAnalizerIODevice::showData(quint16 transferredBytes){
@@ -136,19 +142,31 @@ void FrequencyAnalizerIODevice::showData(quint16 transferredBytes){
 		for (int i = 0; i < maxSamples; ++i)
 			m_buffer.append(QPointF(i, 0));
 	}
-
 	//int resolution = internalBuffer.size()/ maxSamples;
 	//resolution/=sampleBitSize;
 	int resolution=1;
 
 	//std::vector<short> data[transferredBytes/2];
 	auto data = reinterpret_cast< const short*>( internalBuffer.data().data() );
-	for(int i=marker;i<maxSamples;i+=resolution){
+	for(int i=marker;i<transferredBytes/sampleBitSize;i+=resolution){
 		//qDebug()<<transferredBytes/sampleBitSize<<"_"<<i;
-		m_buffer[i/resolution].setY(((float)data[i])/SHRT_MAX);
+		(*curBuf)[marker]=((float)data[i])/SHRT_MAX;
 		marker++;
+		if(marker >= SpectrumLengthSamples){
+			marker = 0;
+			emit calculateSpectrum(curBuf, 48000, 2);
+			if(curBuf == &buf1)
+				curBuf = &buf2;
+			else
+				curBuf = &buf1;
+		}
+
 	}
-	if(marker >= maxSamples)
-		marker = 0;
-	//m_series->replace(m_buffer);
+
+}
+
+void FrequencyAnalizerIODevice::calculationComplete(const FrequencySpectrum &spectrum){
+	for(int i=0;i<spectrum.count();i++)
+		m_buffer[i].setY(spectrum[i].amplitude);
+	m_series->replace(m_buffer);
 }

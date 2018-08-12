@@ -210,7 +210,7 @@ FT2StreamReader::FT2StreamReader(QObject *parent) :
 void FT2StreamReader::addListener(FT2StreamConsumer* listener){
 	auto ampGraph = qobject_cast<XYSeriesIODevice*>(listener);
 	if(ampGraph){
-		connect(this, SIGNAL(transferredBytes(quint16)), ampGraph, SLOT(showData(quint16)));
+		connect(this, SIGNAL(transferredBytes(quint16)), ampGraph, SLOT(showData(quint16)), Qt::QueuedConnection);
 		//return;
 	}
 	listeners.push_back(listener);
@@ -227,7 +227,7 @@ void FT2StreamReader::readStream(){
 	std::lock_guard<std::mutex> locker(rwMutex);
 #ifdef READ_FROM_FILE
 	sizeTransferred = rawSample->read(reinterpret_cast<char*>(&tmpBuf[0]),BUFFER_SIZE);
-	qDebug()<<"Res: "<<sizeTransferred;
+	//qDebug()<<"Res: "<<sizeTransferred;
 #else
 	FT_STATUS ft4222_status = FT4222_SPISlave_GetRxStatus(ftHandle, &rxSize);
 	if (ft4222_status == FT4222_OK)
@@ -244,8 +244,8 @@ void FT2StreamReader::readStream(){
 		//listener->writeData(tmpBuf);
 	emit transferredBytes(sizeTransferred);
 
-	qDebug()<<"Read chunk";
-	qDebug()<<"tmpsize: "<<tmpBuf.size();
+	//qDebug()<<"Read chunk";
+	//qDebug()<<"tmpsize: "<<tmpBuf.size();
 }
 
 FT2StreamConsumer::FT2StreamConsumer(FT2StreamReader* dataSource, bool base, QObject *parent)

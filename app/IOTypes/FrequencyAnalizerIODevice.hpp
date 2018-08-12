@@ -11,7 +11,7 @@ enum WindowFunction {
 };
 
 const WindowFunction DefaultWindowFunction = HannWindow;
-
+typedef FFTRealFixLenParam::DataType        DataType;
 
 template<int N> class PowerOfTwo
 { public: static const int Result = PowerOfTwo<N-1>::Result * 2; };
@@ -36,7 +36,7 @@ public:
 
 public slots:
 	void setWindowFunction(WindowFunction type);
-	void calculateSpectrum(const QByteArray &buffer,
+	void calculateSpectrum(QVector<DataType> *buffer,
 						   int inputFrequency,
 						   int bytesPerSample);
 
@@ -55,7 +55,7 @@ private:
 
 	WindowFunction                              m_windowFunction;
 
-	typedef FFTRealFixLenParam::DataType        DataType;
+
 	QVector<DataType>                           m_window;
 	QVector<DataType>                           m_input;
 	QVector<DataType>                           m_output;
@@ -71,8 +71,18 @@ public:
 	explicit FrequencyAnalizerIODevice(
 			QXYSeries *series, FT2StreamReader* streamReader,
 			int size = 4000, QObject *parent = nullptr);
+signals:
+	void calculateSpectrum(QVector<DataType>* buffer,
+						   int inputFrequency,
+						   int bytesPerSample);
 public slots:
 	void showData(quint16) override;
+	void calculationComplete(const FrequencySpectrum &spectrum);
+private:
+	SpectrumAnalyserThread *analizerThread;
+	QVector<DataType> buf1;
+	QVector<DataType> buf2;
+	QVector<DataType>* curBuf;
 };
 
 #endif // FREQUENCYANALIZERIODEVICE_HPP
