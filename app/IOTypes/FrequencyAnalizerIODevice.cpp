@@ -112,8 +112,8 @@ void SpectrumAnalyserThread::calculateSpectrum(QVector<DataType> *buffer,
 
 		// Bound amplitude to [0.0, 1.0]
 		m_spectrum[i].clipped = (amplitude > 1.0);
-		amplitude = qMax(qreal(0.0), amplitude);
-		amplitude = qMin(qreal(1.0), amplitude);
+		//amplitude = qMax(qreal(0.0), amplitude);
+		//amplitude = qMin(qreal(1.0), amplitude);
 		m_spectrum[i].amplitude = amplitude;
 	}
 	emit calculationComplete(m_spectrum);

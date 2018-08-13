@@ -12,6 +12,7 @@
 #include <QAudioFormat>
 #include <QAudioOutput>
 #include <QSettings>
+#include <QtCharts/QCategoryAxis>
 
 #define X_SAMPLES 1024
 
@@ -63,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	auto chart3 = ui->timeAplitudeChart->chart();
 
 	m_amplitudes->setUseOpenGL(true);
+	frequencies->setUseOpenGL(true);
+	frequencyStats->setUseOpenGL(true);
 	chart3->addSeries(m_amplitudes);
 
 	setupAmplitudeChart();
@@ -117,13 +120,20 @@ void MainWindow::setupAmplitudeChart(){
 void MainWindow::setupFrequencyChart(){
 	auto chart = ui->frequencyChart->chart();
 	//chart->addSeries(frequencies);
-	QValueAxis *axisX = new QValueAxis;
+	QCategoryAxis *axisX = new QCategoryAxis;
+	axisX->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
 	//axisX->setRange(0,  ui->sampleRate->currentData().toInt() / 2);
-	axisX->setRange(0,  4096);
+	axisX->setRange(0,  2048);
+	axisX->append("0 Hz", 0);
+	axisX->append("6000 Hz", 512);
+	axisX->append("12000 Hz", 1024);
+	axisX->append("18000 Hz", 1536);
+	axisX->append("24000 Hz", 2048);
+
 	axisX->setLabelFormat("%g");
 	axisX->setTitleText("Frequency");
 	QValueAxis *axisY = new QValueAxis;
-	axisY->setRange(0, 1);
+	axisY->setRange(0, 8);
 	axisY->setTitleText("Decibels");
 	chart->setAxisX(axisX, frequencies);
 	chart->setAxisY(axisY, frequencies);
