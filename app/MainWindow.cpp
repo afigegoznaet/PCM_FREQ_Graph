@@ -132,8 +132,17 @@ void MainWindow::setupFrequencyChart(){
 
 	axisX->setLabelFormat("%g");
 	axisX->setTitleText("Frequency");
-	QValueAxis *axisY = new QValueAxis;
-	axisY->setRange(0, 8);
+	QCategoryAxis *axisY = new QCategoryAxis;
+	axisY->setRange(-8, 8);
+	axisY->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
+	//axisY->append("0 Db", -16);
+	axisY->append("-96 Db", -8);
+	axisY->append("-72 Db", -4);
+	//axisY->append("32 Db", -2);
+	axisY->append("-64 Db", 0);
+	//axisY->append("128 db", 2);
+	axisY->append("-36 Db", 4);
+	axisY->append("-18 Db", 8);
 	axisY->setTitleText("Decibels");
 	chart->setAxisX(axisX, frequencies);
 	chart->setAxisY(axisY, frequencies);

@@ -2,9 +2,12 @@
 #include <QtCharts/QXYSeries>
 #include "../3rdparty/fftreal/fftreal_wrapper.h"
 #include <QtMath>
+#include <limits>
 
 const qint16  PCMS16MaxValue     =  32767;
 const quint16 PCMS16MaxAmplitude =  32768; // because minimum is -32768
+qreal minAmp = 0;
+qreal maxAmp = 0;
 
 qreal pcmToReal(qint16 pcm)
 {
@@ -111,15 +114,13 @@ void SpectrumAnalyserThread::calculateSpectrum(QVector<DataType> *buffer,
 		qreal amplitude = qLn(magnitude);
 
 		// Bound amplitude to [0.0, 1.0]
-		m_spectrum[i].clipped = (amplitude > 1.0);
+		//m_spectrum[i].clipped = (amplitude > 1.0);
 		//amplitude = qMax(qreal(0.0), amplitude);
 		//amplitude = qMin(qreal(1.0), amplitude);
 		m_spectrum[i].amplitude = amplitude;
 	}
 	emit calculationComplete(m_spectrum);
 }
-
-
 
 FrequencyAnalizerIODevice::FrequencyAnalizerIODevice(
 		QXYSeries *series, FT2StreamReader* streamReader, int size, QObject *parent) :
@@ -166,7 +167,14 @@ void FrequencyAnalizerIODevice::showData(quint16 transferredBytes){
 }
 
 void FrequencyAnalizerIODevice::calculationComplete(const FrequencySpectrum &spectrum){
-	for(int i=0;i<spectrum.count();i++)
-		m_buffer[i].setY(spectrum[i].amplitude);
+	for(int i=0;i<spectrum.count();i++){
+		auto amplitude = spectrum[i].amplitude;
+
+		m_buffer[i].setY(amplitude);
+		minAmp = qMin(minAmp, amplitude);
+		maxAmp = qMax(maxAmp, amplitude);
+	}
 	m_series->replace(m_buffer);
+	qDebug()<<"Max: "<<maxAmp;
+	qDebug()<<"Min: "<<minAmp;
 }
